@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block title %}Statistics{% endblock %}
+{% block body %}
+<h1>Statistics</h1>
+<p>Rotation rate: <strong>{{ rotation }}</strong> loans per copy ({{ loans }} loans, {{ copies }} copies).</p>
+
+<h2>Most borrowed</h2>
+<table>
+    <thead><tr><th>Book</th><th>Loans</th></tr></thead>
+    <tbody>{% for r in top %}<tr><td>{{ r.title }}</td><td>{{ r.n }}</td></tr>{% endfor %}</tbody>
+</table>
+
+<h2>Never borrowed ({{ never|length }})</h2>
+<ul>{% for r in never %}<li>{{ r.title }}</li>{% else %}<li>None.</li>{% endfor %}</ul>
+{% endblock %}
