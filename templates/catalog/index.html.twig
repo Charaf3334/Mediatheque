@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+{% block title %}Catalog{% endblock %}
+{% block body %}
+<h1>Catalog</h1>
+<form method="get"><input type="search" name="q" value="{{ q }}" placeholder="Title, author or ISBN"></form>
+<table>
+    <thead><tr><th>Title</th><th>Author(s)</th><th>Available</th><th></th></tr></thead>
+    <tbody>
+    {% for row in rows %}
+        <tr>
+            <td>{{ row[0].title }}</td>
+            <td>{{ row[0].authors }}</td>
+            <td>{{ row.available ?: 0 }} / {{ row.total }}</td>
+            <td>
+                {% if not row.available and is_granted('ROLE_USER') %}
+                    <form method="post" action="{{ path('reserve', {id: row[0].id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('act') }}">
+                        <button>Reserve</button>
+                    </form>
+                {% endif %}
+            </td>
+        </tr>
+    {% else %}
+        <tr><td colspan="4">No result.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
