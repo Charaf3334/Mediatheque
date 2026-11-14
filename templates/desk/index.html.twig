@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+{% block title %}Desk{% endblock %}
+{% block body %}
+<h1>Desk</h1>
+
+<h2>New loan</h2>
+<form method="post" action="{{ path('desk_borrow') }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('act') }}">
+    <input type="email" name="email" placeholder="Member email" required>
+    <input type="number" name="copy" placeholder="Copy id" required>
+    <button>Borrow</button>
+</form>
+
+{% if held or ready %}
+<h2>Held for pickup</h2>
+<p>
+    Copies: {% for c in held %}<code>#{{ c.id }}</code> {{ c.book.title }} (site {{ c.site }}){{ not loop.last ? ' · ' }}{% endfor %}<br>
+    Members: {% for r in ready %}{{ r.member.email }} → {{ r.book.title }}{{ not loop.last ? ' · ' }}{% endfor %}
+</p>
+{% endif %}
+
+<h2>Active loans</h2>
+<table>
+    <thead><tr><th>Copy</th><th>Book</th><th>Member</th><th>Due</th><th></th></tr></thead>
+    <tbody>
+    {% for l in loans %}
+        <tr>
+            <td>#{{ l.copy.id }} ({{ l.copy.site }})</td>
+            <td>{{ l.copy.book.title }}</td>
+            <td>{{ l.member.email }}</td>
+            <td>{{ l.dueAt|date('Y-m-d') }}{% if l.dueAt < date() %} <mark>overdue</mark>{% endif %}</td>
+            <td>
+                <form method="post" action="{{ path('desk_return', {id: l.id}) }}" style="display:inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('act') }}"><button>Return</button>
+                </form>
+                <form method="post" action="{{ path('desk_lost', {id: l.id}) }}" style="display:inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('act') }}"><button class="secondary">Lost</button>
+                </form>
+            </td>
+        </tr>
+    {% else %}
+        <tr><td colspan="5">No active loans.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
