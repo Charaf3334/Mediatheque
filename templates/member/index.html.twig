@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+{% block title %}My loans{% endblock %}
+{% block body %}
+<h1>My loans</h1>
+<h2>Current</h2>
+<table>
+    <thead><tr><th>Book</th><th>Site</th><th>Due</th><th></th></tr></thead>
+    <tbody>
+    {% for l in loans|filter(l => not l.returnedAt) %}
+        <tr>
+            <td>{{ l.copy.book.title }}</td>
+            <td>{{ l.copy.site }}</td>
+            <td>{{ l.dueAt|date('Y-m-d') }}{% if l.dueAt < date() %} <mark>overdue</mark>{% endif %}</td>
+            <td>
+                {% if not l.renewed %}
+                    <form method="post" action="{{ path('renew', {id: l.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('act') }}">
+                        <button>Renew</button>
+                    </form>
+                {% endif %}
+            </td>
+        </tr>
+    {% else %}
+        <tr><td colspan="4">No current loans.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h2>Reservations</h2>
+<table>
+    <thead><tr><th>Book</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for r in reservations %}
+        <tr>
+            <td>{{ r.book.title }}</td>
+            <td>{{ r.status == 'ready' ? 'Ready: ask at the desk' : 'In the queue' }}</td>
+        </tr>
+    {% else %}
+        <tr><td colspan="2">No reservations.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h2>History</h2>
+<table>
+    <thead><tr><th>Book</th><th>Borrowed</th><th>Returned</th><th>Fee (MAD)</th></tr></thead>
+    <tbody>
+    {% for l in loans|filter(l => l.returnedAt) %}
+        <tr>
+            <td>{{ l.copy.book.title }}</td>
+            <td>{{ l.borrowedAt|date('Y-m-d') }}</td>
+            <td>{{ l.returnedAt|date('Y-m-d') }}</td>
+            <td>{{ l.fee }}</td>
+        </tr>
+    {% else %}
+        <tr><td colspan="4">Nothing yet.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
