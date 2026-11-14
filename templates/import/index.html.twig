@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+{% block title %}Import{% endblock %}
+{% block body %}
+<h1>Import from Open Library</h1>
+<form method="post">
+    <input type="hidden" name="_token" value="{{ csrf_token('act') }}">
+    <textarea name="isbns" rows="6" placeholder="One ISBN per line (a single ISBN or a whole batch)" required></textarea>
+    <label>Copies to create per book <input type="number" name="copies" value="1" min="0" max="20"></label>
+    <button>Import</button>
+</form>
+
+{% if report %}
+<h2>Imported ({{ report.imported|length }})</h2>
+<table>
+    <thead><tr><th>ISBN</th><th>Title</th><th>Note</th></tr></thead>
+    <tbody>{% for r in report.imported %}<tr><td>{{ r[0] }}</td><td>{{ r[1] }}</td><td>{{ r[2] }}</td></tr>{% else %}<tr><td colspan="3">Nothing imported.</td></tr>{% endfor %}</tbody>
+</table>
+<h2>Skipped ({{ report.skipped|length }})</h2>
+<table>
+    <thead><tr><th>ISBN</th><th>Reason</th></tr></thead>
+    <tbody>{% for r in report.skipped %}<tr><td>{{ r[0] }}</td><td>{{ r[1] }}</td></tr>{% else %}<tr><td colspan="2">Nothing skipped.</td></tr>{% endfor %}</tbody>
+</table>
+{% endif %}
+{% endblock %}
