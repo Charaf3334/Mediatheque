@@ -5,7 +5,7 @@
 ## Lancer le projet
 
 ```bash
-docker compose up --build
+docker compose up --build --wait
 ```
 
 Puis http://localhost:8000. Détails, comptes de démonstration et dépannage : [INSTALL.md](INSTALL.md).
@@ -18,7 +18,7 @@ Puis http://localhost:8000. Détails, comptes de démonstration et dépannage : 
 | 2. Règles | fait | `src/Service/LoanService.php` + `tests/` (10 tests) |
 | 3. Produit | fait, version minimale | connexion et rôles, catalogue avec recherche `/`, espace adhérent `/my`, comptoir `/admin/desk`, statistiques `/stats` |
 | 4. API externe | fait | import Open Library par ISBN, à l'unité ou par lot (`/admin/import`) |
-| 5. Livrer | fait | `docker compose up --build` + [INSTALL.md](INSTALL.md) |
+| 5. Livrer | fait | `docker compose up --build --wait` + [INSTALL.md](INSTALL.md) |
 
 ## Ce qui fonctionne
 

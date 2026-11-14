@@ -11,7 +11,7 @@
 ```bash
 git clone https://github.com/Charaf3334/Library.git
 cd Library
-docker compose up --build
+docker compose up --build --wait
 ```
 
 Au premier démarrage (environ 2 à 3 minutes), le conteneur installe les dépendances PHP, applique les migrations et charge les données de démonstration. L'application est prête quand le log affiche `apache2 -D FOREGROUND`.
@@ -49,5 +49,5 @@ docker compose down -v                                               # arrêter 
 - **Port 8000 déjà utilisé** : arrêter l'autre service, ou changer `"8000:80"` dans `docker-compose.yaml`.
 - **Page blanche ou erreur 500 juste après le démarrage** : attendre la fin du premier démarrage (`docker compose logs -f app`).
 - **`Permission denied` dans `var/`** (Linux) : `docker compose exec app chown -R www-data:www-data var`.
-- **Les tests échouent avec « Unknown database library_test »** (volume MySQL créé avant ce script) : `docker compose down -v && docker compose up --build`.
+- **Les tests échouent avec « Unknown database library_test »** (volume MySQL créé avant ce script) : `docker compose down -v && docker compose up --build --wait`.
 - **Page sans mise en forme** : la feuille de style est chargée depuis un CDN ; vérifier la connexion Internet.
